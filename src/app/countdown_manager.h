@@ -1,7 +1,7 @@
 /*
  * countdown_manager.h
  *
- * Independent auto-off countdown timer manager for 6 Light Switches.
+ * Independent auto-off countdown timer manager for 8 Light Switches.
  * Timeouts are tracked in seconds per Tuya smart switch DP specification.
  */
 
@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define COUNTDOWN_LIGHT_COUNT   (6u)
+#define COUNTDOWN_LIGHT_COUNT   (8u)
 
 /**
  * countdown_manager_init
@@ -21,8 +21,8 @@ void countdown_manager_init(void);
 
 /**
  * countdown_manager_set_light
- * Sets or updates auto-off countdown for a light switch (1..6).
- * @param switch_id  1..6
+ * Sets or updates auto-off countdown for a light switch (1..8).
+ * @param switch_id  1..8
  * @param seconds    remaining seconds (0 = cancel)
  */
 void countdown_manager_set_light(uint8_t switch_id, uint32_t seconds);

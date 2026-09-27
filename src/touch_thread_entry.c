@@ -57,7 +57,7 @@ static void handle_touch_event(const touch_event_t *evt)
     {
         /* Under Child Lock: Local short presses for lights are blocked.
          * Advanced actions (5s IR learn, 10s Wi-Fi pairing) and remote commands remain functional. */
-        if ((evt->type >= TOUCH_EVT_S1_SHORT_PRESS) && (evt->type <= TOUCH_EVT_S6_SHORT_PRESS))
+        if ((evt->type >= TOUCH_EVT_S1_SHORT_PRESS) && (evt->type <= TOUCH_EVT_S8_SHORT_PRESS))
         {
             LOG_WARNING("Touch event %d ignored: Child Lock active", evt->type);
             return;
@@ -86,6 +86,8 @@ static void handle_touch_event(const touch_event_t *evt)
         case TOUCH_EVT_S4_SHORT_PRESS:
         case TOUCH_EVT_S5_SHORT_PRESS:
         case TOUCH_EVT_S6_SHORT_PRESS:
+        case TOUCH_EVT_S7_SHORT_PRESS:
+        case TOUCH_EVT_S8_SHORT_PRESS:
             if ((evt->switch_id >= 2u) && (evt->switch_id <= LIGHT_SWITCH_COUNT))
             {
                 light_manager_toggle_switch(evt->switch_id);
@@ -99,7 +101,7 @@ static void handle_touch_event(const touch_event_t *evt)
 
         case TOUCH_EVT_LONG_PRESS_5S:
         {
-            uint8_t active_mask = light_manager_get_mask() & 0x3Fu;
+            uint8_t active_mask = light_manager_get_mask();
             uint8_t active_count = scene_manager_count_outputs(active_mask);
 
             if (active_mask == 0u)

@@ -117,13 +117,15 @@ uint16_t ir_driver_strip_toggle(uint16_t rc5_code);
 #define IR_CODE_R2_SCENE7                      (0x03D3u)
 #define IR_CODE_R2_SCENE8                      (0x03D2u)
 
-/* Default Switch IR Codes (Remote L1-L6 on Addr 13) */
+/* Default Switch IR Codes (Remote L1-L8 on Addr 13) */
 #define IR_DEFAULT_CODE_SWITCH_1               (0x0362u)   /* Remote L1: Addr=13, Cmd=34 (0x0362 / 0x0B62) */
 #define IR_DEFAULT_CODE_SWITCH_2               (0x0351u)   /* Remote L2: Addr=13, Cmd=17 (0x0351 / 0x0B51) */
 #define IR_DEFAULT_CODE_SWITCH_3               (0x036Bu)   /* Remote L3: Addr=13, Cmd=43 (0x036B / 0x0B6B) */
 #define IR_DEFAULT_CODE_SWITCH_4               (0x0343u)   /* Remote L4: Addr=13, Cmd=3  (0x0343 / 0x0B43) */
 #define IR_DEFAULT_CODE_SWITCH_5               (0x036Cu)   /* Remote L5: Addr=13, Cmd=44 (0x036C / 0x0B6C) */
 #define IR_DEFAULT_CODE_SWITCH_6               (0x0346u)   /* Remote L6: Addr=13, Cmd=6  (0x0346 / 0x0B46) */
+#define IR_DEFAULT_CODE_SWITCH_7               (0x0374u)   /* Remote L7: Addr=13, Cmd=52 (0x0374 / 0x0B74) */
+#define IR_DEFAULT_CODE_SWITCH_8               (0x0344u)   /* Remote L8: Addr=13, Cmd=4  (0x0344 / 0x0B44) */
 
 bool ir_driver_is_scene_button(uint8_t address, uint8_t command, uint8_t *out_scene_index);
 bool ir_driver_is_fixed_control_button(uint8_t address, uint8_t command);

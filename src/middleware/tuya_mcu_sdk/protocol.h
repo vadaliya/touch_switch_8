@@ -348,24 +348,32 @@ May need to appropriately increase send and receive buffer sizes.
 #define DPID_SWITCH_5 5
 //Switch 6(Issue and report)
 #define DPID_SWITCH_6 6
+//Switch 7(Issue and report)
+#define DPID_SWITCH_7 7
+//Switch 8(Issue and report)
+#define DPID_SWITCH_8 8
 //Timer 1(Issue and report)
-#define DPID_COUNTDOWN_1 7
+#define DPID_COUNTDOWN_1 9
 //Timer 2(Issue and report)
-#define DPID_COUNTDOWN_2 8
+#define DPID_COUNTDOWN_2 10
 //Timer 3(Issue and report)
-#define DPID_COUNTDOWN_3 9
+#define DPID_COUNTDOWN_3 11
 //Timer 4(Issue and report)
-#define DPID_COUNTDOWN_4 10
+#define DPID_COUNTDOWN_4 12
 //Timer 5(Issue and report)
-#define DPID_COUNTDOWN_5 11
+#define DPID_COUNTDOWN_5 13
 //Timer 6(Issue and report)
-#define DPID_COUNTDOWN_6 12
+#define DPID_COUNTDOWN_6 14
+//Timer 7(Issue and report)
+#define DPID_COUNTDOWN_7 15
+//Timer 8(Issue and report)
+#define DPID_COUNTDOWN_8 16
 //Master Switch(Issue and report)
-#define DPID_SWITCH_ALL 13
+#define DPID_SWITCH_ALL 17
 //Restart Status(Issue and report)
-#define DPID_RELAY_STATUS 14
+#define DPID_RELAY_STATUS 18
 //Backlight(Issue and report)
-#define DPID_BACKLIGHT_SWITCH 16
+#define DPID_BACKLIGHT_SWITCH 19
 //Fan Switch(Issue and report)
 #define DPID_FAN_SWITCH 101
 //Fan Countdown(Issue and report)

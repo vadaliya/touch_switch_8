@@ -88,6 +88,8 @@ typedef enum
     TOUCH_EVT_S4_SHORT_PRESS,
     TOUCH_EVT_S5_SHORT_PRESS,
     TOUCH_EVT_S6_SHORT_PRESS,
+    TOUCH_EVT_S7_SHORT_PRESS,
+    TOUCH_EVT_S8_SHORT_PRESS,
     TOUCH_EVT_LONG_PRESS_5S,      /* IR learn trigger; source switch in .switch_id */
     TOUCH_EVT_LONG_PRESS_10S,     /* Wi-Fi pairing trigger */
     TOUCH_EVT_LONG_PRESS_15S,     /* Master Switch mode toggle trigger (Switch 1) */
@@ -96,7 +98,7 @@ typedef enum
 typedef struct
 {
     touch_event_type_t type;
-    uint8_t            switch_id;   /* 1-6 = S1-S6 */
+    uint8_t            switch_id;   /* 1-8 = S1-S8 */
 } touch_event_t;
 /* Item size for this queue is sizeof(touch_event_t) -- computed by the
  * compiler in app_queue_init.c, not typed as a literal anywhere. If you

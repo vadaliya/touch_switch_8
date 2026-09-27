@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define LIGHT_SWITCH_COUNT  (6u)
+#define LIGHT_SWITCH_COUNT  (8u)
 
 void light_manager_init(void);
 void light_manager_apply_mask(uint8_t mask);

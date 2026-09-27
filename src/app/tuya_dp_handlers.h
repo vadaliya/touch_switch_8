@@ -1,7 +1,7 @@
 /*
  * tuya_dp_handlers.h
  *
- * Handler implementations for Tuya Data Points (DPs) on the 6-switch module.
+ * Handler implementations for Tuya Data Points (DPs) on the 8-switch module.
  */
 
 #ifndef TUYA_DP_HANDLERS_H

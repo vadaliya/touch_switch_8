@@ -1,7 +1,7 @@
 /*
  * ir_learning_manager.c
  *
- * IR learning manager for 6-switch module (S1-S6 and Scenes 1-8).
+ * IR learning manager for 8-switch module (S1-S8 and Scenes 1-8).
  */
 
 #include "app/ir_learning_manager.h"
@@ -15,10 +15,10 @@
 
 #include <string.h>
 
-#define IR_EEPROM_SWITCH_BASE       (0x000u)                                      /* 6 x 2 = 12 bytes (0x000..0x00B) */
-#define IR_EEPROM_SCENE_CODE_BASE   (IR_EEPROM_SWITCH_BASE + (IR_SWITCH_COUNT * sizeof(uint16_t))) /* 0x00C (8 x 2 = 16 bytes) */
-#define IR_EEPROM_SCENE_MASK_BASE   (IR_EEPROM_SCENE_CODE_BASE + (IR_SCENE_COUNT * sizeof(uint16_t))) /* 0x01C (8 x 1 = 8 bytes) */
-#define IR_EEPROM_TOTAL_BYTES       (IR_EEPROM_SCENE_MASK_BASE + IR_SCENE_COUNT)  /* 36 bytes (0x024) */
+#define IR_EEPROM_SWITCH_BASE       (0x000u)                                      /* 8 x 2 = 16 bytes (0x000..0x00F) */
+#define IR_EEPROM_SCENE_CODE_BASE   (IR_EEPROM_SWITCH_BASE + (IR_SWITCH_COUNT * sizeof(uint16_t))) /* 0x010 (8 x 2 = 16 bytes) */
+#define IR_EEPROM_SCENE_MASK_BASE   (IR_EEPROM_SCENE_CODE_BASE + (IR_SCENE_COUNT * sizeof(uint16_t))) /* 0x020 (8 x 1 = 8 bytes) */
+#define IR_EEPROM_TOTAL_BYTES       (IR_EEPROM_SCENE_MASK_BASE + IR_SCENE_COUNT)  /* 40 bytes (0x028) */
 
 static ir_learn_state_t s_state = IR_LEARN_STATE_IDLE;
 static uint8_t          s_active_switch_id = 0u;
@@ -27,7 +27,7 @@ static uint8_t          s_active_scene_mask = 0u;
 static uint32_t         s_elapsed_ms = 0u;
 static bool             s_learning_active = false;
 
-static uint16_t s_switch_code[IR_SWITCH_COUNT] = { 0u, 0u, 0u, 0u, 0u, 0u };
+static uint16_t s_switch_code[IR_SWITCH_COUNT] = { 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u };
 static uint16_t s_scene_code[IR_SCENE_COUNT]   = { 0u };
 static uint8_t  s_scene_mask[IR_SCENE_COUNT]   = { 0u };
 
@@ -155,9 +155,10 @@ static bool ir_learning_manager_persist_all(void)
         (void) eeprom_write_blocking(0x120u, ms_buf, sizeof(ms_buf), 1000u);
     }
 
-    LOG_INFO("IR Codes Saved to Flash: SW1=0x%04X SW2=0x%04X SW3=0x%04X SW4=0x%04X SW5=0x%04X SW6=0x%04X",
+    LOG_INFO("IR Codes Saved to Flash: SW1=0x%04X SW2=0x%04X SW3=0x%04X SW4=0x%04X SW5=0x%04X SW6=0x%04X SW7=0x%04X SW8=0x%04X",
              s_switch_code[0], s_switch_code[1], s_switch_code[2],
-             s_switch_code[3], s_switch_code[4], s_switch_code[5]);
+             s_switch_code[3], s_switch_code[4], s_switch_code[5],
+             s_switch_code[6], s_switch_code[7]);
 
     return true;
 }
@@ -170,7 +171,9 @@ void ir_learning_manager_init(void)
         IR_DEFAULT_CODE_SWITCH_3,
         IR_DEFAULT_CODE_SWITCH_4,
         IR_DEFAULT_CODE_SWITCH_5,
-        IR_DEFAULT_CODE_SWITCH_6
+        IR_DEFAULT_CODE_SWITCH_6,
+        IR_DEFAULT_CODE_SWITCH_7,
+        IR_DEFAULT_CODE_SWITCH_8
     };
 
     for (uint8_t i = 0u; i < IR_SWITCH_COUNT; i++)
@@ -200,9 +203,10 @@ void ir_learning_manager_init(void)
         }
     }
 
-    LOG_INFO("IR Codes Restored: SW1=0x%04X SW2=0x%04X SW3=0x%04X SW4=0x%04X SW5=0x%04X SW6=0x%04X",
+    LOG_INFO("IR Codes Restored: SW1=0x%04X SW2=0x%04X SW3=0x%04X SW4=0x%04X SW5=0x%04X SW6=0x%04X SW7=0x%04X SW8=0x%04X",
              s_switch_code[0], s_switch_code[1], s_switch_code[2],
-             s_switch_code[3], s_switch_code[4], s_switch_code[5]);
+             s_switch_code[3], s_switch_code[4], s_switch_code[5],
+             s_switch_code[6], s_switch_code[7]);
 
     ir_learning_manager_reset();
 }

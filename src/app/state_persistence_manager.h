@@ -1,7 +1,7 @@
 /*
  * state_persistence_manager.h
  *
- * State persistence manager for 6 Light Switches on Renesas RA2E1.
+ * State persistence manager for 8 Light Switches on Renesas RA2L1.
  * Uses Data Flash Block 1 (offset 0x400) for append-log wear leveling.
  */
 
@@ -38,15 +38,15 @@ bool state_persistence_manager_init(uint8_t *out_light_mask);
 
 /**
  * state_persistence_manager_save
- * Writes the current 6-switch light mask to the next available slot in Block 1.
- * @param light_mask  bits 0..5 for SW1..SW6
+ * Writes the current 8-switch light mask to the next available slot in Block 1.
+ * @param light_mask  bits 0..7 for SW1..SW8
  * @return true on success
  */
 bool state_persistence_manager_save(uint8_t light_mask);
 
 /**
  * state_persistence_manager_restore_all
- * Restores light switches (SW1..SW6) per the configured power recovery mode (OFF, ON, or MEMORY).
+ * Restores light switches (SW1..SW8) per the configured power recovery mode (OFF, ON, or MEMORY).
  */
 void state_persistence_manager_restore_all(void);
 

@@ -9,7 +9,7 @@
 
 typedef struct
 {
-    uint8_t  switch_mask; /* bit 0..5: SW1..SW6 */
+    uint8_t  switch_mask; /* bit 0..7: SW1..SW8 */
     uint16_t code;        /* 11-bit toggle-stripped RC5 code */
     bool     active;
 } scene_record_t;

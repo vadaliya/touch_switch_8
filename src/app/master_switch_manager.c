@@ -1,8 +1,8 @@
 /*
  * master_switch_manager.c
  *
- * Implements Switch-1 Master Switch functionality for 6-switch module.
- * When enabled, Switch-1 acts as Master Switch controlling Switches 2-6.
+ * Implements Switch-1 Master Switch functionality for 8-switch module.
+ * When enabled, Switch-1 acts as Master Switch controlling Switches 2-8.
  */
 
 #include "app/master_switch_manager.h"
@@ -37,8 +37,8 @@ static uint8_t calc_checksum(const master_switch_record_t *rec)
 
 static bool persist_master_switch_state(bool is_master)
 {
-    /* Read existing IR codes & scenes from 0x000 */
-    uint8_t ir_buf[38];
+    /* Read existing IR codes & scenes from 0x000 (40 bytes for 8 switches & scenes) */
+    uint8_t ir_buf[40];
     bool has_ir = eeprom_read(0u, ir_buf, sizeof(ir_buf), 100u);
 
     /* Read existing Backlight config from 0x100 */
@@ -134,7 +134,7 @@ void master_switch_manager_toggle_mode(void)
     if (s_is_master_switch)
     {
         bool any_on = false;
-        for (uint8_t i = 2u; i <= 6u; i++)
+        for (uint8_t i = 2u; i <= LIGHT_SWITCH_COUNT; i++)
         {
             if (light_manager_get_switch(i))
             {
@@ -158,7 +158,7 @@ void master_switch_manager_press(void)
     }
 
     bool any_on = false;
-    for (uint8_t i = 2u; i <= 6u; i++)
+    for (uint8_t i = 2u; i <= LIGHT_SWITCH_COUNT; i++)
     {
         if (light_manager_get_switch(i))
         {
@@ -169,21 +169,21 @@ void master_switch_manager_press(void)
 
     if (any_on)
     {
-        /* Snapshot the currently ON outputs for SW2-SW6 */
+        /* Snapshot the currently ON outputs for SW2-SW8 */
         s_saved_switch_mask = 0u;
-        for (uint8_t i = 2u; i <= 6u; i++)
+        for (uint8_t i = 2u; i <= LIGHT_SWITCH_COUNT; i++)
         {
             if (light_manager_get_switch(i))
             {
-                s_saved_switch_mask |= (uint8_t) (1u << i);
+                s_saved_switch_mask |= (uint8_t) (1u << (i - 1u));
             }
         }
         s_has_snapshot = true;
 
         LOG_INFO("Master Switch PRESS: Captured ON snapshot (mask=0x%02X), turning all OFF", s_saved_switch_mask);
 
-        /* Turn all controlled outputs (SW2-SW6) OFF */
-        for (uint8_t i = 2u; i <= 6u; i++)
+        /* Turn all controlled outputs (SW2-SW8) OFF */
+        for (uint8_t i = 2u; i <= LIGHT_SWITCH_COUNT; i++)
         {
             if (light_manager_get_switch(i))
             {
@@ -203,9 +203,9 @@ void master_switch_manager_press(void)
         {
             LOG_INFO("Master Switch PRESS: Restoring saved snapshot (mask=0x%02X)", s_saved_switch_mask);
 
-            for (uint8_t i = 2u; i <= 6u; i++)
+            for (uint8_t i = 2u; i <= LIGHT_SWITCH_COUNT; i++)
             {
-                if ((s_saved_switch_mask & (uint8_t) (1u << i)) != 0u)
+                if ((s_saved_switch_mask & (uint8_t) (1u << (i - 1u))) != 0u)
                 {
                     light_manager_set_switch(i, true);
                     backlight_manager_notify_switch_state(i, true);
@@ -231,7 +231,7 @@ void master_switch_manager_notify_manual_change(void)
     }
 
     bool any_on = false;
-    for (uint8_t i = 2u; i <= 6u; i++)
+    for (uint8_t i = 2u; i <= LIGHT_SWITCH_COUNT; i++)
     {
         if (light_manager_get_switch(i))
         {

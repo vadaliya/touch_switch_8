@@ -1,7 +1,7 @@
 /*
  * ir_learning_manager.h
  *
- * IR learning manager for 6-switch module (S1-S6 and Scenes 1-8).
+ * IR learning manager for 8-switch module (S1-S8 and Scenes 1-8).
  */
 
 #ifndef IR_LEARNING_MANAGER_H
@@ -13,7 +13,7 @@
 #define IR_LEARN_TIMEOUT_MS        (15000u)
 #define IR_LEARN_TRIGGER_MS        (5000u)
 #define IR_SCENE_COUNT             (8u)
-#define IR_SWITCH_COUNT            (6u)
+#define IR_SWITCH_COUNT            (8u)
 
 typedef enum
 {

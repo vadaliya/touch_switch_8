@@ -1,7 +1,7 @@
 /*
  * touch_driver.h
  *
- * Touch driver for 6-switch module (S1-S6, no fan, no slider).
+ * Touch driver for 8-switch module (S1-S8, no fan, no slider).
  */
 
 #ifndef TOUCH_DRIVER_H
@@ -18,6 +18,8 @@ typedef enum
     TOUCH_ELEM_S4,
     TOUCH_ELEM_S5,
     TOUCH_ELEM_S6,
+    TOUCH_ELEM_S7,
+    TOUCH_ELEM_S8,
     TOUCH_ELEM_COUNT
 } touch_element_t;
 

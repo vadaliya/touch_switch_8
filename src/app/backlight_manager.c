@@ -35,8 +35,8 @@ static void persist_config(void)
 {
     s_config.checksum = calculate_checksum(&s_config);
 
-    /* Read existing IR codes & scenes (38 bytes) from 0x000 so they are preserved across Block 0 erase */
-    uint8_t ir_buf[38];
+    /* Read existing IR codes & scenes (40 bytes) from 0x000 so they are preserved across Block 0 erase */
+    uint8_t ir_buf[40];
     bool has_ir = eeprom_read(0u, ir_buf, sizeof(ir_buf), 100u);
 
     /* Read existing Power Recovery config (4 bytes) from 0x110 */

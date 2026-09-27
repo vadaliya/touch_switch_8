@@ -19,7 +19,6 @@ void light_manager_init(void)
 
 void light_manager_apply_mask(uint8_t mask)
 {
-    mask &= 0x3Fu;
     s_light_state_mask = mask;
 
     for (uint8_t i = 0u; i < LIGHT_SWITCH_COUNT; i++)
@@ -78,7 +77,7 @@ uint8_t light_manager_get_mask(void)
 
 void light_manager_all_on(void)
 {
-    light_manager_apply_mask(0x3Fu);
+    light_manager_apply_mask(0xFFu);
     state_persistence_manager_save(s_light_state_mask);
 }
 

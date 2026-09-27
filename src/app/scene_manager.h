@@ -6,7 +6,7 @@
 
 #define SCENE_COUNT         (8u)
 #define SCENE_MIN_OUTPUTS   (2u)
-#define SCENE_MAX_OUTPUTS   (5u)    /* 6 switches: max outputs = 6 - 1 = 5 */
+#define SCENE_MAX_OUTPUTS   (7u)    /* 8 switches: max outputs = 8 - 1 = 7 */
 
 void    scene_manager_init(void);
 void    scene_manager_reset(void);

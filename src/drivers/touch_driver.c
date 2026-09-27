@@ -1,7 +1,7 @@
 /*
  * touch_driver.c
  *
- * Touch driver for 6-switch module (S1-S6).
+ * Touch driver for 8-switch module (S1-S8).
  */
 
 #include "drivers/touch_driver.h"
@@ -25,8 +25,8 @@ typedef struct
     bool     long_15s_fired;
 } button_state_t;
 
-/* Indices: 0-5 for switches S1-S6 */
-static button_state_t s_button[6];
+/* Indices: 0-7 for switches S1-S8 */
+static button_state_t s_button[8];
 
 static uint32_t now_ms(void)
 {
@@ -41,7 +41,7 @@ static void post_event(touch_event_type_t type, uint8_t switch_id)
 
 static void process_button(uint8_t button_index, uint64_t status, uint8_t event_switch_id)
 {
-    if ((event_switch_id < 1u) || (event_switch_id > 6u))
+    if ((event_switch_id < 1u) || (event_switch_id > 8u))
     {
         return;
     }
@@ -132,4 +132,6 @@ void touch_driver_scan(void)
     process_button(CONFIG01_INDEX_SW4, status, 4u); /* S4 */
     process_button(CONFIG01_INDEX_SW5, status, 5u); /* S5 */
     process_button(CONFIG01_INDEX_SW6, status, 6u); /* S6 */
+    process_button(CONFIG01_INDEX_SW7, status, 7u); /* S7 */
+    process_button(CONFIG01_INDEX_SW8, status, 8u); /* S8 */
 }

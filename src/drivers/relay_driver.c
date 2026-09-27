@@ -1,8 +1,8 @@
 /*
  * relay_driver.c
  *
- * Relay driver for 6-switch module.
- * Pin map matches FSP configuration for 6 relays + Relay Enable.
+ * Relay driver for 8-switch module.
+ * Pin map matches FSP configuration for 8 relays + Relay Enable.
  */
 
 #include "drivers/relay_driver.h"
@@ -14,17 +14,19 @@
 #define RELAY_PIN_LEVEL_ON         (false)
 #define RELAY_PIN_LEVEL_OFF        (true)
 
-static const bsp_io_port_pin_t s_light_relay_pin[6] =
+static const bsp_io_port_pin_t s_light_relay_pin[8] =
 {
     FSP_RELAY_SW1,   /* P002, OUT-1 -> SW1 Relay */
     FSP_RELAY_SW2,   /* P010, OUT-2 -> SW2 Relay */
     FSP_RELAY_SW3,   /* P011, OUT-3 -> SW3 Relay */
     FSP_RELAY_SW4,   /* P012, OUT-4 -> SW4 Relay */
     FSP_RELAY_SW5,   /* P013, OUT-5 -> SW5 Relay */
-    FSP_RELAY_SW6,   /* P015, OUT-6 -> SW6 Relay */
+    FSP_RELAY_SW6,   /* P014, OUT-6 -> SW6 Relay */
+    FSP_RELAY_SW7,   /* P015, OUT-7 -> SW7 Relay */
+    FSP_RELAY_SW8,   /* P500, OUT-8 -> SW8 Relay */
 };
 
-/* P500, physical pin 37 -> OUT Out Enable */
+/* P102 -> Relay Output Enable */
 static const bsp_io_port_pin_t s_output_enable_pin = FSP_RELAY_EN;
 
 static uint8_t s_light_state_mask = 0u;
@@ -38,7 +40,7 @@ void relay_driver_init(void)
     }
     s_initialized = true;
 
-    for (uint8_t i = 0u; i < 6u; i++)
+    for (uint8_t i = 0u; i < 8u; i++)
     {
         hal_gpio_write(s_light_relay_pin[i], RELAY_PIN_LEVEL_OFF);
     }
@@ -51,7 +53,7 @@ void relay_driver_init(void)
 
 void relay_driver_set_light(uint8_t switch_id, bool on)
 {
-    if ((switch_id < 1u) || (switch_id > 6u))
+    if ((switch_id < 1u) || (switch_id > 8u))
     {
         return;
     }
@@ -71,7 +73,7 @@ void relay_driver_set_light(uint8_t switch_id, bool on)
 
 bool relay_driver_get_light(uint8_t switch_id)
 {
-    if ((switch_id < 1u) || (switch_id > 6u))
+    if ((switch_id < 1u) || (switch_id > 8u))
     {
         return false;
     }
@@ -91,7 +93,7 @@ void relay_driver_set_output_enable(bool enabled)
 
 void relay_driver_all_off(void)
 {
-    for (uint8_t i = 0u; i < 6u; i++)
+    for (uint8_t i = 0u; i < 8u; i++)
     {
         hal_gpio_write(s_light_relay_pin[i], RELAY_PIN_LEVEL_OFF);
     }

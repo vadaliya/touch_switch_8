@@ -1,7 +1,7 @@
 /*
  * countdown_manager.c
  *
- * Implements countdown timers for 6 light switches.
+ * Implements countdown timers for 8 light switches.
  */
 
 #include "app/countdown_manager.h"
@@ -11,7 +11,7 @@
 #include "app/app_log.h"
 #include "app/tuya_dp_handlers.h"
 
-static uint32_t s_light_timers[COUNTDOWN_LIGHT_COUNT] = { 0u, 0u, 0u, 0u, 0u, 0u };
+static uint32_t s_light_timers[COUNTDOWN_LIGHT_COUNT] = { 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u };
 static uint32_t s_ms_accumulator = 0u;
 
 void countdown_manager_init(void)

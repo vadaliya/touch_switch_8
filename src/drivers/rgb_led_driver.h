@@ -1,8 +1,8 @@
 /*
  * rgb_led_driver.h
  *
- * Driver for 6-switch module Neopixel LEDs:
- *   - P400: 6-LED backlight chain (LED0-LED5)
+ * Driver for 8-switch module Neopixel LEDs:
+ *   - P400: 8-LED backlight chain (LED0-LED7)
  *   - P401: 1-LED Wi-Fi status chain
  */
 
@@ -12,7 +12,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define BACKLIGHT_LED_COUNT   (6u)
+#define BACKLIGHT_LED_COUNT   (8u)
 #define WIFI_LED_COUNT        (1u)
 
 typedef struct
@@ -38,14 +38,14 @@ void rgb_led_driver_init(void);
 
 /**
  * rgb_led_driver_set_switch_led
- * @param switch_id  1-6 (SW1-SW6) -- internally mapped to physical LED index:
- *                    LED0=SW1, LED1=SW3, LED2=SW5, LED3=SW6, LED4=SW4, LED5=SW2.
+ * @param switch_id  1-8 (SW1-SW8) -- internally mapped to physical LED index:
+ *                    LED0=SW1, LED1=SW3, LED2=SW5, LED3=SW7, LED4=SW8, LED5=SW6, LED6=SW4, LED7=SW2.
  */
 void rgb_led_driver_set_switch_led(uint8_t switch_id, bool on, rgb_color_t on_color, rgb_color_t off_color);
 
 /**
  * rgb_led_driver_switch_led_bit
- * Returns the backlight chain bit (1u << physical_index) for a given switch_id (1-6),
+ * Returns the backlight chain bit (1u << physical_index) for a given switch_id (1-8),
  * or 0 for an out-of-range switch_id.
  */
 uint8_t rgb_led_driver_switch_led_bit(uint8_t switch_id);

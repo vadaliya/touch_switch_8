@@ -1,7 +1,7 @@
 /*
  * state_persistence_manager.c
  *
- * Implements circular append-log state retention in Data Flash Block 1 for 6 switches.
+ * Implements circular append-log state retention in Data Flash Block 1 for 8 switches.
  */
 
 #include "app/state_persistence_manager.h"
@@ -26,11 +26,6 @@ static bool validate_record(const uint8_t bytes[4], uint8_t *out_light_mask)
     uint8_t light_mask = bytes[1];
     uint8_t reserved   = bytes[2];
     uint8_t checksum   = bytes[3];
-
-    if ((light_mask & 0xC0u) != 0u)
-    {
-        return false;
-    }
 
     uint8_t expected_checksum = (uint8_t) (STATE_PERSIST_MAGIC ^ light_mask ^ reserved);
     if (checksum != expected_checksum)
@@ -219,8 +214,8 @@ bool state_persistence_manager_set_power_recovery_mode(power_recovery_mode_t mod
     s_power_recovery_mode   = mode;
     s_power_recovery_loaded = true;
 
-    /* Read existing IR codes & scenes (38 bytes at 0x000) */
-    uint8_t ir_buf[38];
+    /* Read existing IR codes & scenes (40 bytes at 0x000) */
+    uint8_t ir_buf[40];
     bool has_ir = eeprom_read(0u, ir_buf, sizeof(ir_buf), 100u);
 
     /* Read existing Backlight config (at 0x100) */
@@ -293,8 +288,8 @@ void state_persistence_manager_restore_all(void)
     }
     else if (recovery_mode == POWER_RECOVERY_ON)
     {
-        light_manager_apply_mask(0x3Fu);
-        state_persistence_manager_save(0x3Fu);
+        light_manager_apply_mask(0xFFu);
+        state_persistence_manager_save(0xFFu);
     }
     else /* POWER_RECOVERY_MEMORY (default) */
     {

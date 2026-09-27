@@ -1,11 +1,11 @@
 /*
  * master_switch_manager.h
  *
- * Switch-1 Master Switch Manager for Touch Switch 6 project.
+ * Switch-1 Master Switch Manager for Touch Switch 8 project.
  *
  * When Switch-1 is configured as Master Switch (via 15s hold):
  * - Switch-1 short press does NOT toggle Relay 1.
- * - Instead, Switch-1 acts as a Master ON/OFF for SW2..SW6.
+ * - Instead, Switch-1 acts as a Master ON/OFF for SW2..SW8.
  * - If any controlled switch is ON: captures the ON snapshot and turns all OFF.
  * - If all controlled switches are OFF: restores the previous snapshot (if available).
  * - If user turns off all switches manually, the snapshot is cleared.

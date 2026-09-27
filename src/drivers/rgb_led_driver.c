@@ -1,7 +1,7 @@
 /*
  * rgb_led_driver.c
  *
- * Driver for 6-switch module Neopixel LEDs (Backlight on P400, Wi-Fi on P401).
+ * Driver for 8-switch module Neopixel LEDs (Backlight on P400, Wi-Fi on P401).
  */
 
 #include "drivers/rgb_led_driver.h"
@@ -16,11 +16,11 @@
 static const bsp_io_port_pin_t BACKLIGHT_DATA_PIN = FSP_BACKLIGHT_DATA_PIN; /* P400, physical pin 1 */
 static const bsp_io_port_pin_t WIFI_DATA_PIN      = FSP_WIFI_DATA_PIN;      /* P401, physical pin 2 */
 
-/* switch_id (1-6) -> backlight LED index per confirmed wiring:
- * LED0 = SW1, LED1 = SW3, LED2 = SW5, LED3 = SW6, LED4 = SW4, LED5 = SW2.
+/* switch_id (1-8) -> backlight LED index per serpentine snake wiring:
+ * SW1->LED0, SW2->LED7, SW3->LED1, SW4->LED6, SW5->LED2, SW6->LED5, SW7->LED3, SW8->LED4.
  * Index 0 unused (switch_id is 1-based).
  */
-static const uint8_t s_switch_to_led[7] = { 0xFFu, 0u, 5u, 1u, 4u, 2u, 3u };
+static const uint8_t s_switch_to_led[9] = { 0xFFu, 0u, 7u, 1u, 6u, 2u, 5u, 3u, 4u };
 
 static rgb_color_t s_backlight_raw[BACKLIGHT_LED_COUNT];
 static rgb_color_t s_wifi_raw;
@@ -85,7 +85,7 @@ void rgb_led_driver_init(void)
 
 void rgb_led_driver_set_switch_led(uint8_t switch_id, bool on, rgb_color_t on_color, rgb_color_t off_color)
 {
-    if ((switch_id < 1u) || (switch_id > 6u))
+    if ((switch_id < 1u) || (switch_id > 8u))
     {
         return;
     }
@@ -99,7 +99,7 @@ void rgb_led_driver_set_switch_led(uint8_t switch_id, bool on, rgb_color_t on_co
 
 uint8_t rgb_led_driver_switch_led_bit(uint8_t switch_id)
 {
-    if ((switch_id < 1u) || (switch_id > 6u))
+    if ((switch_id < 1u) || (switch_id > 8u))
     {
         return 0u;
     }

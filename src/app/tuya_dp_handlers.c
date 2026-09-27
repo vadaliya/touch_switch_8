@@ -24,6 +24,16 @@
 static bool    s_color_target = true;  /* true = ON color, false = OFF color */
 static uint8_t s_relay_status = 2u;    /* 0=OFF, 1=ON, 2=MEMORY (Restore Last State) */
 
+static const uint8_t s_switch_dpid[LIGHT_SWITCH_COUNT] = {
+    DPID_SWITCH_1, DPID_SWITCH_2, DPID_SWITCH_3, DPID_SWITCH_4,
+    DPID_SWITCH_5, DPID_SWITCH_6, DPID_SWITCH_7, DPID_SWITCH_8
+};
+
+static const uint8_t s_countdown_dpid[LIGHT_SWITCH_COUNT] = {
+    DPID_COUNTDOWN_1, DPID_COUNTDOWN_2, DPID_COUNTDOWN_3, DPID_COUNTDOWN_4,
+    DPID_COUNTDOWN_5, DPID_COUNTDOWN_6, DPID_COUNTDOWN_7, DPID_COUNTDOWN_8
+};
+
 bool tuya_dp_handle_switch(uint8_t switch_id, bool on)
 {
     if ((switch_id >= 1u) && (switch_id <= LIGHT_SWITCH_COUNT))
@@ -32,8 +42,8 @@ bool tuya_dp_handle_switch(uint8_t switch_id, bool on)
         light_manager_set_switch(switch_id, on);
         backlight_manager_notify_switch_state(switch_id, on);
 
-        (void) mcu_dp_bool_update(DPID_SWITCH_1 + (switch_id - 1u), on);
-        (void) mcu_dp_bool_update(DPID_SWITCH_ALL, (light_manager_get_mask() == 0x3Fu));
+        (void) mcu_dp_bool_update(s_switch_dpid[switch_id - 1u], on);
+        (void) mcu_dp_bool_update(DPID_SWITCH_ALL, (light_manager_get_mask() == 0xFFu));
         if (switch_id >= 2u)
         {
             master_switch_manager_notify_manual_change();
@@ -50,7 +60,7 @@ bool tuya_dp_handle_countdown(uint8_t switch_id, uint32_t seconds)
     {
         LOG_INFO("Tuya DP: Countdown SW%u set to %lu s", switch_id, (unsigned long) seconds);
         countdown_manager_set_light(switch_id, seconds);
-        (void) mcu_dp_value_update(DPID_COUNTDOWN_1 + (switch_id - 1u), seconds);
+        (void) mcu_dp_value_update(s_countdown_dpid[switch_id - 1u], seconds);
         return true;
     }
 
@@ -72,12 +82,10 @@ bool tuya_dp_handle_switch_all(bool on)
     backlight_manager_refresh_all();
 
     (void) mcu_dp_bool_update(DPID_SWITCH_ALL, on);
-    (void) mcu_dp_bool_update(DPID_SWITCH_1, on);
-    (void) mcu_dp_bool_update(DPID_SWITCH_2, on);
-    (void) mcu_dp_bool_update(DPID_SWITCH_3, on);
-    (void) mcu_dp_bool_update(DPID_SWITCH_4, on);
-    (void) mcu_dp_bool_update(DPID_SWITCH_5, on);
-    (void) mcu_dp_bool_update(DPID_SWITCH_6, on);
+    for (uint8_t i = 0u; i < LIGHT_SWITCH_COUNT; i++)
+    {
+        (void) mcu_dp_bool_update(s_switch_dpid[i], on);
+    }
 
     return true;
 }
@@ -192,24 +200,20 @@ void tuya_dp_sync_all(void)
 {
     LOG_INFO("Tuya DP: Reporting full system status sync (all_data_update)...");
 
-    /* Light switches 1..6 */
-    (void) mcu_dp_bool_update(DPID_SWITCH_1, light_manager_get_switch(1u));
-    (void) mcu_dp_bool_update(DPID_SWITCH_2, light_manager_get_switch(2u));
-    (void) mcu_dp_bool_update(DPID_SWITCH_3, light_manager_get_switch(3u));
-    (void) mcu_dp_bool_update(DPID_SWITCH_4, light_manager_get_switch(4u));
-    (void) mcu_dp_bool_update(DPID_SWITCH_5, light_manager_get_switch(5u));
-    (void) mcu_dp_bool_update(DPID_SWITCH_6, light_manager_get_switch(6u));
+    /* Light switches 1..8 */
+    for (uint8_t i = 0u; i < LIGHT_SWITCH_COUNT; i++)
+    {
+        (void) mcu_dp_bool_update(s_switch_dpid[i], light_manager_get_switch(i + 1u));
+    }
 
-    /* Countdown timers 1..6 */
-    (void) mcu_dp_value_update(DPID_COUNTDOWN_1, countdown_manager_get_light(1u));
-    (void) mcu_dp_value_update(DPID_COUNTDOWN_2, countdown_manager_get_light(2u));
-    (void) mcu_dp_value_update(DPID_COUNTDOWN_3, countdown_manager_get_light(3u));
-    (void) mcu_dp_value_update(DPID_COUNTDOWN_4, countdown_manager_get_light(4u));
-    (void) mcu_dp_value_update(DPID_COUNTDOWN_5, countdown_manager_get_light(5u));
-    (void) mcu_dp_value_update(DPID_COUNTDOWN_6, countdown_manager_get_light(6u));
+    /* Countdown timers 1..8 */
+    for (uint8_t i = 0u; i < LIGHT_SWITCH_COUNT; i++)
+    {
+        (void) mcu_dp_value_update(s_countdown_dpid[i], countdown_manager_get_light(i + 1u));
+    }
 
     /* Master Switch */
-    (void) mcu_dp_bool_update(DPID_SWITCH_ALL, (light_manager_get_mask() == 0x3Fu));
+    (void) mcu_dp_bool_update(DPID_SWITCH_ALL, (light_manager_get_mask() == 0xFFu));
 
     /* Power Recovery Mode */
     (void) mcu_dp_enum_update(DPID_RELAY_STATUS, s_relay_status);
@@ -245,7 +249,7 @@ void tuya_dp_notify_switch_changed(uint8_t switch_id, bool on)
     if ((switch_id >= 1u) && (switch_id <= LIGHT_SWITCH_COUNT))
     {
         tuya_dp_cmd_t cmd;
-        cmd.dpid   = (uint8_t)(DPID_SWITCH_1 + (switch_id - 1u));
+        cmd.dpid   = s_switch_dpid[switch_id - 1u];
         cmd.length = 1u;
         cmd.value[0] = on ? 1u : 0u;
         (void) xQueueSend(g_tuya_dp_queue, &cmd, 0u);
@@ -253,7 +257,7 @@ void tuya_dp_notify_switch_changed(uint8_t switch_id, bool on)
         /* Also queue Master Switch report */
         cmd.dpid   = DPID_SWITCH_ALL;
         cmd.length = 1u;
-        cmd.value[0] = (light_manager_get_mask() == 0x3Fu) ? 1u : 0u;
+        cmd.value[0] = (light_manager_get_mask() == 0xFFu) ? 1u : 0u;
         (void) xQueueSend(g_tuya_dp_queue, &cmd, 0u);
     }
 }
@@ -263,7 +267,7 @@ void tuya_dp_notify_countdown_changed(uint8_t switch_id, uint32_t seconds)
     if ((switch_id >= 1u) && (switch_id <= LIGHT_SWITCH_COUNT))
     {
         tuya_dp_cmd_t cmd;
-        cmd.dpid   = (uint8_t)(DPID_COUNTDOWN_1 + (switch_id - 1u));
+        cmd.dpid   = s_countdown_dpid[switch_id - 1u];
         cmd.length = 4u;
         cmd.value[0] = (uint8_t)((seconds >> 24) & 0xFFu);
         cmd.value[1] = (uint8_t)((seconds >> 16) & 0xFFu);

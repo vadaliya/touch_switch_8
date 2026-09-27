@@ -90,12 +90,16 @@ const DOWNLOAD_CMD_S download_cmd[] =
   {DPID_SWITCH_4, DP_TYPE_BOOL},
   {DPID_SWITCH_5, DP_TYPE_BOOL},
   {DPID_SWITCH_6, DP_TYPE_BOOL},
+  {DPID_SWITCH_7, DP_TYPE_BOOL},
+  {DPID_SWITCH_8, DP_TYPE_BOOL},
   {DPID_COUNTDOWN_1, DP_TYPE_VALUE},
   {DPID_COUNTDOWN_2, DP_TYPE_VALUE},
   {DPID_COUNTDOWN_3, DP_TYPE_VALUE},
   {DPID_COUNTDOWN_4, DP_TYPE_VALUE},
   {DPID_COUNTDOWN_5, DP_TYPE_VALUE},
   {DPID_COUNTDOWN_6, DP_TYPE_VALUE},
+  {DPID_COUNTDOWN_7, DP_TYPE_VALUE},
+  {DPID_COUNTDOWN_8, DP_TYPE_VALUE},
   {DPID_SWITCH_ALL, DP_TYPE_BOOL},
   {DPID_RELAY_STATUS, DP_TYPE_ENUM},
   {DPID_BACKLIGHT_SWITCH, DP_TYPE_BOOL},
@@ -412,6 +416,48 @@ static unsigned char dp_download_switch_6_handle(const unsigned char value[], un
         return ERROR;
 }
 /*****************************************************************************
+Function name : dp_download_switch_7_handle
+Function description : on DPID_SWITCH_7 processing function
+Input parameter : value:Source data
+        : length:Data length
+Return parameter : Successful return:SUCCESS/Failed to return:ERROR
+Instructions for use : Issue and report type,need to report the result to App after data is dealt with
+*****************************************************************************/
+static unsigned char dp_download_switch_7_handle(const unsigned char value[], unsigned short length)
+{
+    unsigned char ret;
+    unsigned char switch_7;
+    
+    switch_7 = mcu_get_dp_download_bool(value,length);
+  
+    ret = tuya_dp_handle_switch(7u, switch_7 != 0) ? SUCCESS : ERROR;
+    if(ret == SUCCESS)
+        return SUCCESS;
+    else
+        return ERROR;
+}
+/*****************************************************************************
+Function name : dp_download_switch_8_handle
+Function description : on DPID_SWITCH_8 processing function
+Input parameter : value:Source data
+        : length:Data length
+Return parameter : Successful return:SUCCESS/Failed to return:ERROR
+Instructions for use : Issue and report type,need to report the result to App after data is dealt with
+*****************************************************************************/
+static unsigned char dp_download_switch_8_handle(const unsigned char value[], unsigned short length)
+{
+    unsigned char ret;
+    unsigned char switch_8;
+    
+    switch_8 = mcu_get_dp_download_bool(value,length);
+  
+    ret = tuya_dp_handle_switch(8u, switch_8 != 0) ? SUCCESS : ERROR;
+    if(ret == SUCCESS)
+        return SUCCESS;
+    else
+        return ERROR;
+}
+/*****************************************************************************
 Function name : dp_download_countdown_1_handle
 Function description : on DPID_COUNTDOWN_1 processing function
 Input parameter : value:Source data
@@ -568,6 +614,48 @@ static unsigned char dp_download_countdown_6_handle(const unsigned char value[],
     
     //There should be a report after processing the DP
     ret = tuya_dp_handle_countdown(6u, (uint32_t)countdown_6) ? SUCCESS : ERROR;
+    if(ret == SUCCESS)
+        return SUCCESS;
+    else
+        return ERROR;
+}
+/*****************************************************************************
+Function name : dp_download_countdown_7_handle
+Function description : on DPID_COUNTDOWN_7 processing function
+Input parameter : value:Source data
+        : length:Data length
+Return parameter : Successful return:SUCCESS/Failed to return:ERROR
+Instructions for use : Issue and report type,need to report the result to App after data is dealt with
+*****************************************************************************/
+static unsigned char dp_download_countdown_7_handle(const unsigned char value[], unsigned short length)
+{
+    unsigned char ret;
+    unsigned long countdown_7;
+    
+    countdown_7 = mcu_get_dp_download_value(value,length);
+    
+    ret = tuya_dp_handle_countdown(7u, (uint32_t)countdown_7) ? SUCCESS : ERROR;
+    if(ret == SUCCESS)
+        return SUCCESS;
+    else
+        return ERROR;
+}
+/*****************************************************************************
+Function name : dp_download_countdown_8_handle
+Function description : on DPID_COUNTDOWN_8 processing function
+Input parameter : value:Source data
+        : length:Data length
+Return parameter : Successful return:SUCCESS/Failed to return:ERROR
+Instructions for use : Issue and report type,need to report the result to App after data is dealt with
+*****************************************************************************/
+static unsigned char dp_download_countdown_8_handle(const unsigned char value[], unsigned short length)
+{
+    unsigned char ret;
+    unsigned long countdown_8;
+    
+    countdown_8 = mcu_get_dp_download_value(value,length);
+    
+    ret = tuya_dp_handle_countdown(8u, (uint32_t)countdown_8) ? SUCCESS : ERROR;
     if(ret == SUCCESS)
         return SUCCESS;
     else
@@ -904,6 +992,14 @@ u8 dp_download_handle(u8 dpid, const u8 value[], u16 length) {
             //Switch 6processing function
             ret = dp_download_switch_6_handle(value,length);
         break;
+        case DPID_SWITCH_7:
+            //Switch 7processing function
+            ret = dp_download_switch_7_handle(value,length);
+        break;
+        case DPID_SWITCH_8:
+            //Switch 8processing function
+            ret = dp_download_switch_8_handle(value,length);
+        break;
         case DPID_COUNTDOWN_1:
             //Timer 1processing function
             ret = dp_download_countdown_1_handle(value,length);
@@ -927,6 +1023,14 @@ u8 dp_download_handle(u8 dpid, const u8 value[], u16 length) {
         case DPID_COUNTDOWN_6:
             //Timer 6processing function
             ret = dp_download_countdown_6_handle(value,length);
+        break;
+        case DPID_COUNTDOWN_7:
+            //Timer 7processing function
+            ret = dp_download_countdown_7_handle(value,length);
+        break;
+        case DPID_COUNTDOWN_8:
+            //Timer 8processing function
+            ret = dp_download_countdown_8_handle(value,length);
         break;
         case DPID_SWITCH_ALL:
             //Master Switchprocessing function
